@@ -1,0 +1,30 @@
+//
+// Author: Tom Stainer, University of Liverpool
+//
+// Title: Near Detector Geometry Design for LAGUNA-LBNO studies
+//
+// Description: This is a root based geometry for an initial Near Detector design for the LAGUNA-LBNO collaboration. It consists if a High Pressure Gas Argon TPC,
+//		surrounded by a thin aluminum case. This is then surrounded by a Totally Active Scintillator (TAS) of plastic, with its own enclosure.
+//		Then it has an ECAL layer which consists of Scintillator / Lead layers, which are not fully surrounding as to avoid large mass upstream of the TPC and TAS.
+//		A HCAL layer then follows with Scintillator / Iron layers with the same design as the ECAL, with the idea to magnetise the Iron.
+//		A C-shaped magnet is also implemented but can also be ignored in the geometry.
+//		A block of iron is placed behind to represent a MIND detector downstream of the ND.
+//		This is all inserted into the Rock, which is assumed to be sandstone, and the detector is implanted into a cavity of 1 m surrounding the ND.
+//
+// All parameters that concern design can be changed within the src/NearDetector.cxx file, once this is done use make to rebuild the new design. 
+// To turn a layer off, i.e remove the Magnet simply choose its size to = 0
+//
+
+
+if any changes are made to any of the files first run: "make"
+
+then run exe: app/Geometry.exe
+
+then change to outputFiles directory
+
+and finally run macro with rott to draw the geometry: root -l drawGeometry.cxx
+
+NOTE: If dimensions are altered within the main file (NearDetector.cxx) then "make" must still be ran
+      Also the drawGeometry.cxx macro can be altered without make to view different levels of the geometry
+
+------THis is also in a script named build.sh in the same directory as the Makefile--------------
