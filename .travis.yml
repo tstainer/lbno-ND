@@ -1,7 +1,11 @@
 language: cpp
 
+# Need to fetch extra-root-includes because root misses them out for some reason
+
 before_script:
   - sudo apt-get install cernlib-montecarlo root-system
+  - wget http://hep.ph.liv.ac.uk/~pwaller/extra-root-534-includes.tar.bz2
+  - tar xf extra-root-534-includes.tar.bz2
   
 script: ./waf configure build install
 
