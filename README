@@ -16,15 +16,16 @@
 //
 
 
-if any changes are made to any of the files first run: "make"
+Build is done via waf, in order to do this run the commands:
+	1. ./waf configure
+	2. ./waf build
+	3. build/geometry
 
-then run exe: app/Geometry.exe
+Then file is output into outputFiles/ND_geometry.root and the .sh script in this directory will draw the geometry. 
+	4. cd outputFiles
+	5. root -l drawGeometry.cxx
 
-then change to outputFiles directory
+To remove build files run:
+	./waf distclean
 
-and finally run macro with rott to draw the geometry: root -l drawGeometry.cxx
-
-NOTE: If dimensions are altered within the main file (NearDetector.cxx) then "make" must still be ran
-      Also the drawGeometry.cxx macro can be altered without make to view different levels of the geometry
-
-------THis is also in a script named build.sh in the same directory as the Makefile--------------
+The Makefile is not necessary for build but can be altered to run on users local machine
