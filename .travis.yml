@@ -1,0 +1,22 @@
+language: cpp
+
+# Need to fetch extra-root-includes because root misses them out for some reason
+
+# First line is a hack to install 1210's root-system on 1204.
+before_script:
+  - echo "deb http://archive.ubuntu.com/ubuntu/ quantal main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+  - sudo apt-get update
+  - sudo apt-get install cernlib-montecarlo root-system
+  - wget http://hep.ph.liv.ac.uk/~pwaller/extra-root-534-includes.tar.bz2
+  - tar xf extra-root-534-includes.tar.bz2
+  
+script: ./waf configure build install
+after_script:
+  - install/bin/geometry
+
+notifications:
+  email:
+    recipients:
+      - peter.waller@cern.ch
+    on_success: always
+    on_failure: always
