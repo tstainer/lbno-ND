@@ -45,7 +45,7 @@
 #include "RockConstruction.hh"
 
 //filename
-std::string fOutFilename = "outputFiles/ND_v6_18e-3gcm-3_noRock.root";
+std::string fOutFilename = "outputFiles/ND_geometry.root";
 
 //free parameters for geometry (in meters)
 double fRock_r = 30;

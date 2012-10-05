@@ -1,6 +1,6 @@
 {
   gSystem->Load("libGeom");
-  TGeoManager::Import("ND_v6_18e-3gcm-3_noRock.root");
+  TGeoManager::Import("ND_geometry.root");
   TGeoVolume * Rock_Volume = gGeoManager->GetVolume("Rock_Volume");
   TGeoVolume * Cavity_Volume = gGeoManager->GetVolume("Cavity_MIND_Volume");
   gGeoManager->SetTopVisible(kFALSE);

@@ -1,20 +1,16 @@
-##############################################
-# Makefile for detector geometry construction#                
-##############################################
-#
-# Author: Tom Stainer
-#
-#A Makefile is essentially made of:
-# The Target is the name of the file
-# The Dependancies are the files that the target depends on
-# THe commands to run based on the target and the dependancies
-
-#----------REMEMBER TO USE A TAB FOR COMMANDS!!-----------------------
-#---------------------------------------------------------------------
+###############################################
+# Makefile for detector geometry construction #                
+#					      #
+#                                             #
+# 		Author: Tom Stainer           #
+###############################################
 
 SHELL = /bin/sh
 NAME = all
 MAKEFILE = Makefile
+
+EXTENSION = cxx
+H_EXTENSION = hh
 
 # ROOT headers and libraries
 ROOT_INCLUDES  = -I$(shell root-config --incdir)
@@ -23,16 +19,12 @@ ROOT_LIBRARIES = $(shell root-config --glibs) \
 
 INCLUDES := $(ROOT_INCLUDES) $(LINUX_SYS_INCLUDES)
 
-LIBRARIES := $(SYSLIBS) $(ROOT_LIBRARIES)
-
-LIBS  :=  $(LIBRARIES) 
+LIBS := $(SYSLIBS) $(ROOT_LIBRARIES)
 
 #local src and include directories for my own created cxx and header files
 IDIR    = include
 SDIR	= src
-
-#object directory
-ODIR	= $(SDIR)/obj
+ODIR	= obj
 
 VPATH	= $(SDIR) $(IDIR) 
 
@@ -53,10 +45,10 @@ ROOTSYS = /hepstore/store6/stainer/root
 #name of the executable
 TARGET  = Geometry
 
-all: $(TARGET)
+all: $(ODIR) $(TARGET)
 
 #objects needed for linking together for the target exe
-OBJS    = NearDetector.o RockConstruction.o TPCFiducialConstruction.o \
+OBJ    = NearDetector.o RockConstruction.o TPCFiducialConstruction.o \
 	TPCEnclosureConstruction.o TPCEnclosureConstructionX.o TPCEnclosureConstructionY.o TPCEnclosureConstructionZ.o \
 	TASFiducialConstruction.o TASFiducialConstructionX.o TASFiducialConstructionY.o TASFiducialConstructionZ.o \
 	TASEnclosureConstruction.o TASEnclosureConstructionX.o TASEnclosureConstructionY.o TASEnclosureConstructionZ.o \
@@ -70,10 +62,14 @@ OBJS    = NearDetector.o RockConstruction.o TPCFiducialConstruction.o \
 	MINDConstruction.o \
 	CavityConstruction.o
 
+OBJS = $(addprefix $(ODIR)/,$(OBJ))
+
 #includes
 INC = $(IDIR)/*.hh $(IDIR)/TPC/*.hh $(IDIR)/TAS/*.hh $(IDIR)/ECAL/*.hh $(IDIR)/HCAL/*.hh \
 	$(IDIR)/Magnet/*.hh $(IDIR)/MIND/*.hh $(IDIR)/Cavity/*.hh $(ROOTSYS)/include/*.h
 
+$(ODIR):
+	mkdir $(ODIR)
 
 #executable file linking always comes first!
 $(TARGET): $(OBJS)
@@ -82,128 +78,129 @@ $(TARGET): $(OBJS)
 	@echo Done!
 
 #compile the libraries
-NearDetector.o: $(SDIR)/NearDetector.cxx $(INC)
+$(ODIR)/NearDetector.o: $(SDIR)/NearDetector.cxx $(INC)
 	@echo ........Building Objects
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/NearDetector.cxx
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/NearDetector.cxx -o $@
 
-RockConstruction.o: $(SDIR)/RockConstruction.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/RockConstruction.cxx
+$(ODIR)/RockConstruction.o: $(SDIR)/RockConstruction.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/RockConstruction.cxx -o $@
 
-TPCFiducialConstruction.o: $(SDIR)/TPC/TPCFiducialConstruction.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TPC/TPCFiducialConstruction.cxx
+$(ODIR)/TPCFiducialConstruction.o: $(SDIR)/TPC/TPCFiducialConstruction.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TPC/TPCFiducialConstruction.cxx -o $@
 
 #1 base class and 3 derived classes for TPCEnclosure
-TPCEnclosureConstruction.o: $(SDIR)/TPC/TPCEnclosureConstruction.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TPC/TPCEnclosureConstruction.cxx
+$(ODIR)/TPCEnclosureConstruction.o: $(SDIR)/TPC/TPCEnclosureConstruction.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TPC/TPCEnclosureConstruction.cxx -o $@
 
-TPCEnclosureConstructionX.o: $(SDIR)/TPC/TPCEnclosureConstructionX.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TPC/TPCEnclosureConstructionX.cxx
+$(ODIR)/TPCEnclosureConstructionX.o: $(SDIR)/TPC/TPCEnclosureConstructionX.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TPC/TPCEnclosureConstructionX.cxx -o $@
 
-TPCEnclosureConstructionY.o: $(SDIR)/TPC/TPCEnclosureConstructionY.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TPC/TPCEnclosureConstructionY.cxx
+$(ODIR)/TPCEnclosureConstructionY.o: $(SDIR)/TPC/TPCEnclosureConstructionY.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TPC/TPCEnclosureConstructionY.cxx -o $@
 
-TPCEnclosureConstructionZ.o: $(SDIR)/TPC/TPCEnclosureConstructionZ.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TPC/TPCEnclosureConstructionZ.cxx
-
+$(ODIR)/TPCEnclosureConstructionZ.o: $(SDIR)/TPC/TPCEnclosureConstructionZ.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TPC/TPCEnclosureConstructionZ.cxx -o $@
 #1 base class and 3 derived classes for TASFiducial
-TASFiducialConstruction.o: $(SDIR)/TAS/TASFiducialConstruction.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASFiducialConstruction.cxx
+$(ODIR)/TASFiducialConstruction.o: $(SDIR)/TAS/TASFiducialConstruction.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASFiducialConstruction.cxx -o $@
 
-TASFiducialConstructionX.o: $(SDIR)/TAS/TASFiducialConstructionX.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASFiducialConstructionX.cxx
+$(ODIR)/TASFiducialConstructionX.o: $(SDIR)/TAS/TASFiducialConstructionX.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASFiducialConstructionX.cxx -o $@
 
-TASFiducialConstructionY.o: $(SDIR)/TAS/TASFiducialConstructionY.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASFiducialConstructionY.cxx
+$(ODIR)/TASFiducialConstructionY.o: $(SDIR)/TAS/TASFiducialConstructionY.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASFiducialConstructionY.cxx -o $@
 
-TASFiducialConstructionZ.o: $(SDIR)/TAS/TASFiducialConstructionZ.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASFiducialConstructionZ.cxx
+$(ODIR)/TASFiducialConstructionZ.o: $(SDIR)/TAS/TASFiducialConstructionZ.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASFiducialConstructionZ.cxx -o $@
 
 #1 base class and 3 derived classes for TASEnclosure
-TASEnclosureConstruction.o: $(SDIR)/TAS/TASEnclosureConstruction.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASEnclosureConstruction.cxx
+$(ODIR)/TASEnclosureConstruction.o: $(SDIR)/TAS/TASEnclosureConstruction.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASEnclosureConstruction.cxx -o $@
 
-TASEnclosureConstructionX.o: $(SDIR)/TAS/TASEnclosureConstructionX.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASEnclosureConstructionX.cxx
+$(ODIR)/TASEnclosureConstructionX.o: $(SDIR)/TAS/TASEnclosureConstructionX.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASEnclosureConstructionX.cxx -o $@
 
-TASEnclosureConstructionY.o: $(SDIR)/TAS/TASEnclosureConstructionY.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASEnclosureConstructionY.cxx
+$(ODIR)/TASEnclosureConstructionY.o: $(SDIR)/TAS/TASEnclosureConstructionY.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASEnclosureConstructionY.cxx -o $@
 
-TASEnclosureConstructionZ.o: $(SDIR)/TAS/TASEnclosureConstructionZ.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASEnclosureConstructionZ.cxx
+$(ODIR)/TASEnclosureConstructionZ.o: $(SDIR)/TAS/TASEnclosureConstructionZ.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/TAS/TASEnclosureConstructionZ.cxx -o $@
 
 #1 base class and 3 derived classes for ECALScintillatorConstruction
-ECALScintillatorConstruction.o: $(SDIR)/ECAL/ECALScintillatorConstruction.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALScintillatorConstruction.cxx
+$(ODIR)/ECALScintillatorConstruction.o: $(SDIR)/ECAL/ECALScintillatorConstruction.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALScintillatorConstruction.cxx -o $@
 
-ECALScintillatorConstructionZ.o: $(SDIR)/ECAL/ECALScintillatorConstructionZ.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALScintillatorConstructionZ.cxx
+$(ODIR)/ECALScintillatorConstructionZ.o: $(SDIR)/ECAL/ECALScintillatorConstructionZ.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALScintillatorConstructionZ.cxx -o $@
 
-ECALScintillatorConstructionY.o: $(SDIR)/ECAL/ECALScintillatorConstructionY.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALScintillatorConstructionY.cxx
+$(ODIR)/ECALScintillatorConstructionY.o: $(SDIR)/ECAL/ECALScintillatorConstructionY.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALScintillatorConstructionY.cxx -o $@
 
-ECALScintillatorConstructionX.o: $(SDIR)/ECAL/ECALScintillatorConstructionX.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALScintillatorConstructionX.cxx
+$(ODIR)/ECALScintillatorConstructionX.o: $(SDIR)/ECAL/ECALScintillatorConstructionX.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALScintillatorConstructionX.cxx -o $@
 
 #1 base class and 3 derived classes for ECALSeparatorConstruction
-ECALSeparatorConstruction.o: $(SDIR)/ECAL/ECALSeparatorConstruction.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALSeparatorConstruction.cxx
+$(ODIR)/ECALSeparatorConstruction.o: $(SDIR)/ECAL/ECALSeparatorConstruction.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALSeparatorConstruction.cxx -o $@
 
-ECALSeparatorConstructionZ.o: $(SDIR)/ECAL/ECALSeparatorConstructionZ.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALSeparatorConstructionZ.cxx
+$(ODIR)/ECALSeparatorConstructionZ.o: $(SDIR)/ECAL/ECALSeparatorConstructionZ.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALSeparatorConstructionZ.cxx -o $@
 
-ECALSeparatorConstructionY.o: $(SDIR)/ECAL/ECALSeparatorConstructionY.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALSeparatorConstructionY.cxx
+$(ODIR)/ECALSeparatorConstructionY.o: $(SDIR)/ECAL/ECALSeparatorConstructionY.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALSeparatorConstructionY.cxx -o $@
 
-ECALSeparatorConstructionX.o: $(SDIR)/ECAL/ECALSeparatorConstructionX.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALSeparatorConstructionX.cxx
+$(ODIR)/ECALSeparatorConstructionX.o: $(SDIR)/ECAL/ECALSeparatorConstructionX.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALSeparatorConstructionX.cxx -o $@
 #ECAL
-ECALConstruction.o: $(SDIR)/ECAL/ECALConstruction.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALConstruction.cxx
+$(ODIR)/ECALConstruction.o: $(SDIR)/ECAL/ECALConstruction.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/ECAL/ECALConstruction.cxx -o $@
 
 #1 base class and 3 derived classes for ECALScintillatorConstruction
-HCALScintillatorConstruction.o: $(SDIR)/HCAL/HCALScintillatorConstruction.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALScintillatorConstruction.cxx
+$(ODIR)/HCALScintillatorConstruction.o: $(SDIR)/HCAL/HCALScintillatorConstruction.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALScintillatorConstruction.cxx -o $@
 
-HCALScintillatorConstructionZ.o: $(SDIR)/HCAL/HCALScintillatorConstructionZ.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALScintillatorConstructionZ.cxx
+$(ODIR)/HCALScintillatorConstructionZ.o: $(SDIR)/HCAL/HCALScintillatorConstructionZ.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALScintillatorConstructionZ.cxx -o $@
 
-HCALScintillatorConstructionY.o: $(SDIR)/HCAL/HCALScintillatorConstructionY.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALScintillatorConstructionY.cxx
+$(ODIR)/HCALScintillatorConstructionY.o: $(SDIR)/HCAL/HCALScintillatorConstructionY.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALScintillatorConstructionY.cxx -o $@
 
-HCALScintillatorConstructionX.o: $(SDIR)/HCAL/HCALScintillatorConstructionX.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALScintillatorConstructionX.cxx
+$(ODIR)/HCALScintillatorConstructionX.o: $(SDIR)/HCAL/HCALScintillatorConstructionX.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALScintillatorConstructionX.cxx -o $@
 
 #1 base class and 3 derived classes for HCALSeparatorConstruction
-HCALSeparatorConstruction.o: $(SDIR)/HCAL/HCALSeparatorConstruction.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALSeparatorConstruction.cxx
+$(ODIR)/HCALSeparatorConstruction.o: $(SDIR)/HCAL/HCALSeparatorConstruction.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALSeparatorConstruction.cxx -o $@
 
-HCALSeparatorConstructionZ.o: $(SDIR)/HCAL/HCALSeparatorConstructionZ.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALSeparatorConstructionZ.cxx
+$(ODIR)/HCALSeparatorConstructionZ.o: $(SDIR)/HCAL/HCALSeparatorConstructionZ.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALSeparatorConstructionZ.cxx -o $@
 
-HCALSeparatorConstructionY.o: $(SDIR)/HCAL/HCALSeparatorConstructionY.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALSeparatorConstructionY.cxx
+$(ODIR)/HCALSeparatorConstructionY.o: $(SDIR)/HCAL/HCALSeparatorConstructionY.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALSeparatorConstructionY.cxx -o $@
 
-HCALSeparatorConstructionX.o: $(SDIR)/HCAL/HCALSeparatorConstructionX.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALSeparatorConstructionX.cxx
+$(ODIR)/HCALSeparatorConstructionX.o: $(SDIR)/HCAL/HCALSeparatorConstructionX.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALSeparatorConstructionX.cxx -o $@
 
 #HCAL
-HCALConstruction.o: $(SDIR)/HCAL/HCALConstruction.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALConstruction.cxx
+$(ODIR)/HCALConstruction.o: $(SDIR)/HCAL/HCALConstruction.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/HCAL/HCALConstruction.cxx -o $@
 
 #Magnet
-MagnetConstruction.o: $(SDIR)/Magnet/MagnetConstruction.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/Magnet/MagnetConstruction.cxx
+$(ODIR)/MagnetConstruction.o: $(SDIR)/Magnet/MagnetConstruction.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/Magnet/MagnetConstruction.cxx -o $@
 
 #MIND
-MINDConstruction.o: $(SDIR)/MIND/MINDConstruction.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/MIND/MINDConstruction.cxx
+$(ODIR)/MINDConstruction.o: $(SDIR)/MIND/MINDConstruction.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/MIND/MINDConstruction.cxx -o $@
 
 #Cavity	
-CavityConstruction.o: $(SDIR)/Cavity/CavityConstruction.cxx $(INC)
-	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/Cavity/CavityConstruction.cxx
+$(ODIR)/CavityConstruction.o: $(SDIR)/Cavity/CavityConstruction.cxx $(INC)
+	$(CC) $(CFLAGS) $(LIBS) $(SDIR)/Cavity/CavityConstruction.cxx -o $@
+
 
 .PHONY : clean
 
 #clean up
 clean:
-	\rm *.o *~ $(TARGET)
+	@rm -f app/$(TARGET).exe
+	@rm -rf $(ODIR) 
