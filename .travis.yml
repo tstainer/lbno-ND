@@ -1,0 +1,16 @@
+language: cpp
+
+before_script:
+  - sudo apt-get install cernlib-montecarlo root-system
+  
+script: ./waf configure build install
+
+after_script:
+  - install/bin/geometry
+
+notifications:
+  email:
+    recipients:
+      - peter.waller@cern.ch
+    on_success: always
+    on_failure: always
